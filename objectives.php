@@ -29,18 +29,18 @@ if(isset($_POST['btn-save']))
 // Update Data
 if (isset($_POST['btn-update-save'])) {
   // echo 'save';
-  $id = $_POST['id'];
-  $name = $_POST['name'];
-  $description = $_POST['description'];
-  $rt_date = $_POST['rt_date'];
-  $c_date = $_POST['c_date'];
+  $update_id = $_POST['update_id'];
+  $update_name = $_POST['update_name'];
+  $update_description = $_POST['update_description'];
+  $update_rt_date = $_POST['update_rt_date'];
+  $update_c_date = $_POST['update_c_date'];
 
   $query = "UPDATE objective SET
-            name='$name',
-            description='$description',
-            rt_date='$rt_date'
-            c_date='$c_date'
-            WHERE id = '$id'
+            name='$update_name',
+            description='$update_description',
+            rt_date='$update_rt_date'
+            c_date='$update_c_date'
+            WHERE id = '$update_id'
             ";
             $query_run = mysqli_query($conn,$query);
 
@@ -234,12 +234,11 @@ body {
                               <td><?= $row['c_date']?></td>
                               <td>
                                   <button 
-                                    type="button"
+                                    type="submit"
                                     name="btn-update"
-                                    value="<?= $row['id']?>"
                                     class="btn btn-sm btn-info text-dark"
                                     data-bs-toggle="modal" 
-                                    data-bs-target="#modalUpdate">
+                                    data-bs-target="#modalUpdate<?php echo $row['id']?>">
                                   <i class="fas fa-pencil-alt"></i>
                                   </button> 
                               </td>
@@ -247,10 +246,9 @@ body {
                                   <button
                                     type="submit" 
                                     name="btn-delete"
-                                    value="<?= $row['id']?>"
                                     class="btn btn-sm btn-danger text-white" 
                                     data-bs-toggle="modal" 
-                                    data-bs-target="#modalDelete">
+                                    data-bs-target="#modalDelete<?php echo $row['id']?>">
                                     <i class="fas fa-trash"></i>
                                   </button>
 
@@ -277,11 +275,14 @@ body {
 
 <?php
   $conn = new mysqli("localhost","root","","cgi");
-  
-?>
+  $result = mysqli_query($conn, 'Select * from objective');
+  while ($data = mysqli_fetch_array($result))
+  {
+    ?>
+
 
   <!-- Modal Update -->
-  <div class="modal fade" id="modalUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="modalUpdate<?php echo $data['id']?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header" style="background-color: #3FA8D5">
@@ -289,65 +290,76 @@ body {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-        <form action="" method="POST">
+        <form action="objectives.php" method="POST">
           <input type="hidden" name="update_id" value="<?= $row['id']?>">
 
           <div class="form-group mb-3">
             <label for="" class="form-label">Name:</label>
-            <input type="text" name="name" value="<?= $row['name']?>" class="form-control inputField" id="name">
+            <input type="text" name="update_name" value="<?= $row['name']?>" class="form-control inputField" id="name">
           </div>
 
           <div class="form-group mb-3">
             <label for="" class="form-label">Description:</label>
-            <input type="text" name="description" value="<?= $row['description']?>" class="form-control inputField" id="description">
+            <input type="text" name="update_description" value="<?= $row['description']?>" class="form-control inputField" id="description">
           </div>
 
           <div class="form-group mb-3">
             <label for="" class="form-label">Reason Target Date:</label>
-            <input type="email" name="rt_date" value="<?= $row['rt_date']?>" class="form-control inputField" id="rt_date">
+            <input type="date" name="update_rt_date" value="<?= $row['rt_date']?>" class="form-control inputField" id="rt_date">
           </div>
 
           <div class="form-group mb-3">
             <label for="" class="form-label">Completed Date:</label>
-            <input type="email" name="c_date" value="<?= $row['c_date']?>" class="form-control inputField" id="c_date">
+            <input type="date" name="update_c_date" value="<?= $row['c_date']?>" class="form-control inputField" id="c_date">
           </div>
 
-        </form>
+
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-sm btn-info text-dark" data-bs-dismiss="modal">
-          <i class="fas fa-times"></i> Cancel
-          </button>
-          <button type="button"  name="btn-update-save" class="btn btn-sm btn-success"> 
-            <i class="fas fa-check"></i> Save
-          </button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-info text-dark" data-bs-dismiss="modal">
+              <i class="fas fa-times"></i> Cancel
+              </button>
+              <button type="submit"  name="btn-update-save" class="btn btn-sm btn-success"> 
+                <i class="fas fa-check"></i> Save
+              </button>
+            </form>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
 
     <!-- Modal Update -->
-  <div class="modal fade" id="modalDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header" style="background-color: #3FA8D5">
-          <h5 class="modal-title text-white text-uppercase" id="staticBackdropLabel">Modal Delete</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-           <p class="h3">Are you Sure...?</p>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-sm btn-info text-dark" data-bs-dismiss="modal">
-          <i class="fas fa-times"></i> Cancel
-        </button>
-        <button type="button"  name="btn-delete" class="btn btn-sm btn-danger"> 
-          <i class="fas fa-trash"></i> Delete
-        </button>
+      <div class="modal fade" id="modalDelete<?php echo $data['id']?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #303952">
+              <h5 class="modal-title text-white text-uppercase" id="staticBackdropLabel">Modal Delete</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            
+              <p class="h3">Are you sure?</p>
+              
+            </div>
+            <div class="modal-footer">
+              <form action="objectives.php" method="post">
+                <input type="hidden" name="deleteID" value="<?php echo $data['id']?>">
+                <button type="button" class="btn btn-sm btn-info text-dark" data-bs-dismiss="modal">
+                  <i class="fas fa-times"></i> Cancel
+                </button>
+
+                <button type="submit" name="btn-delete-info" class="btn btn-sm btn-danger"> 
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+              </form>
+            
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    <?php
+  }
+?>
   <!-- Bootstrap Script -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   
