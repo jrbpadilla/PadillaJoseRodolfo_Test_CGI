@@ -38,7 +38,7 @@ if (isset($_POST['btn-update-save'])) {
   $query = "UPDATE objective SET
             name='$update_name',
             description='$update_description',
-            rt_date='$update_rt_date'
+            rt_date='$update_rt_date',
             c_date='$update_c_date'
             WHERE id = '$update_id'
             ";
@@ -53,7 +53,7 @@ if (isset($_POST['btn-update-save'])) {
 }
 
 // Delete Data
-if(isset($_POST['btn-delete']))
+if(isset($_POST['btn-delete-info']))
 {
   // echo "save";
   $deleteID = $_POST['deleteID'];
